@@ -13,17 +13,20 @@ Watch your AI agents walk, talk, hand off work — then trace every file, and st
 
 Each role in your pipeline — research, product, design, frontend/backend, QA, deploy, ops — sits at a desk in a 2D office. When work is handed off, the agent **gets up, walks to the next desk**, and speaks via a **speech bubble**. A bug? QA walks back to the dev's desk with a red bubble. Click any workstation to open the full detail drawer.
 
-## Why another agent visualizer?
+## How does it compare?
 
-Existing tools show agents as **chat streams or DAG graphs**. Conflux Desk bets on a spatial office metaphor, and adds the three things dashboards lack:
+Naming alternatives is common practice in open source (cf. Tauri vs Electron, Astro vs Next.js). We keep the comparison **factual, dated and neutral** — the projects below are all great at what they do:
 
-| | OpenClaw Office / AI Town | Conflux Desk |
-| --- | --- | --- |
-| Metaphor | Virtual office / town ✅ | Virtual office ✅ |
-| **Traceable** — every file with version timeline, code diff, and the message that delivered it | ❌ | ✅ message ↔ file bidirectional tracing |
-| **Interruptible** — pause, @ any agent as "supervisor", give instructions, get acknowledgment | ❌ (watch-only) | ✅ human-in-the-loop |
-| **Embeddable** — runtime-agnostic plugin (`Desk.mount()` + postMessage), not tied to one gateway | ❌ (bound to OpenClaw) | ✅ one `<script>`, hot data reload |
-| Stack | Next.js + SQLite + WebSocket | **zero-dependency static files** |
+| Capability | [OpenClaw Office](https://github.com/wickedapp/openclaw-office) | [AI Town](https://github.com/a16z-infra/ai-town) | Conflux Desk |
+| --- | --- | --- | --- |
+| Spatial agents that walk & talk | ✅ office view | ✅ town simulation | ✅ office view |
+| Delivery-pipeline semantics (roles, handoffs, bug loops) | ✅ — bound to the OpenClaw runtime | — (built for social simulation) | ✅ — runtime-agnostic |
+| File traceability (version timeline, diffs, message ↔ file) | — | — | ✅ |
+| Human-in-the-loop (pause, @agent instructions, ack) | — (watch-only) | — | ✅ |
+| Embeddable plugin API (iframe + postMessage, hot data reload) | — | — | ✅ |
+| Stack | Next.js · SQLite · WebSocket | Next.js · Convex | **zero-dependency static files** |
+
+<sub>Capabilities verified against the projects' public READMEs as of **2026-08**. They evolve quickly — corrections are welcome via issues/PR.</sub>
 
 ## Quick start
 
@@ -111,7 +114,7 @@ projects/
 
 需求调研、产品、设计、前后端、测试、部署、运维——每个角色坐在自己的工位上。工作交接时角色**起身走到对方工位**，头顶**弹出对话气泡**；测试发现 Bug 会拿着红色气泡走回研发工位。点开工位电脑，可以看到该角色全部交接消息与文件版本。
 
-**三个差异化**（对比 OpenClaw Office / AI Town 等同类）：
+**三个差异化**（与 OpenClaw Office、AI Town 等同类的详细对比见上方英文表格，遵循"事实准确、标注时效、措辞中性"原则）：
 
 1. **可追溯** —— 每个文件带版本时间线、代码 diff，以及“它由哪条消息交付、因哪个 Bug 修改”的双向链路；
 2. **可介入** —— 随时暂停，以「👔 主管」身份 @ 任意角色下指令，角色气泡确认并记入档案（human-in-the-loop）；
