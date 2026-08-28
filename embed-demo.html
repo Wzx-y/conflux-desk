@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>宿主项目示例 · 嵌入 Conflux Desk</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: #eef1f6; color: #2b3442; }
+  header {
+    height: 54px; background: #1f2937; color: #fff;
+    display: flex; align-items: center; padding: 0 20px; gap: 12px;
+  }
+  header h1 { font-size: 16px; font-weight: 600; }
+  header .tag {
+    font-size: 11px; padding: 2px 10px; border-radius: 999px;
+    background: #334155; color: #94a3b8;
+  }
+  main { max-width: 1280px; margin: 0 auto; padding: 18px 20px 40px; }
+  .card {
+    background: #fff; border-radius: 16px; box-shadow: 0 8px 30px rgba(30,40,70,.08);
+    padding: 14px 16px 16px; margin-bottom: 16px;
+  }
+  .card h2 { font-size: 14px; color: #475569; margin-bottom: 10px; }
+  .toolbar { display: flex; gap: 8px; flex-wrap: wrap; }
+  .toolbar button {
+    height: 34px; padding: 0 14px; border-radius: 8px; border: 1px solid #cbd5e1;
+    background: #f8fafc; color: #334155; font-size: 13px; cursor: pointer;
+  }
+  .toolbar button:hover { background: #eef2f7; }
+  .toolbar button.primary { background: #3372ff; border-color: #3372ff; color: #fff; }
+  #deskWrap { height: 700px; }
+  #hostLog {
+    background: #0f172a; color: #7dd3fc; font: 12px/1.8 Consolas, monospace;
+    border-radius: 10px; padding: 12px 16px; max-height: 150px; overflow-y: auto;
+    white-space: pre-wrap;
+  }
+  .note { font-size: 12px; color: #94a3b8; line-height: 1.8; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🧩 我的项目（宿主页面示例）</h1>
+  <span class="tag">Conflux Desk 以 iframe 插件形式嵌入</span>
+</header>
+
+<main>
+  <div class="card">
+    <h2>宿主控制 —— 通过 Desk API 驱动嵌入的办公室</h2>
+    <div class="toolbar">
+      <button id="bPause">⏸ 暂停</button>
+      <button id="bResume">▶ 继续</button>
+      <button id="bEvent" class="primary">📨 推送实时交接（测试 → 后端 · bug）</button>
+      <button id="bWork">⌨️ 推送实时任务（前端开工）</button>
+      <button id="bIv">👔 主管指令（@后端研发）</button>
+      <button id="bLoad">🌐 热替换为「官网改版」数据</button>
+      <button id="bReplay">↺ 重播</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>嵌入的协作办公室（你的页面里的一个普通容器）</h2>
+    <div id="deskWrap"><div id="desk" style="height:100%"></div></div>
+  </div>
+
+  <div class="card">
+    <h2>插件上报（desk.on 订阅的事件）</h2>
+    <div id="hostLog">（等待事件…）</div>
+    <p class="note" style="margin-top:10px">
+      接入真实系统时：把按钮换成你们的事件流订阅即可 ——
+      任务状态变化 → <code>desk.sendEvent({type:'handoff', from:'dev', to:'test', text:'提测', att:[...]})</code>，
+      文件版本变化 → 事件携带 <code>att/deliver</code>，办公室会自动走动、弹气泡、更新文件工作台。
+    </p>
+  </div>
+</main>
+
+<script src="./desk-plugin.js"></script>
+<script>
+  const log = document.getElementById('hostLog');
+  const say = s => { log.textContent = (log.textContent === '（等待事件…）' ? '' : log.textContent) + s + '\n'; log.scrollTop = log.scrollHeight; };
+
+  // 1) 挂载（使用插件内置的 order-tracking 演示数据）
+  const desk = Desk.mount({ container: '#desk' });
+
+  // 2) 订阅插件上报
+  desk.on(m => say('📩 ' + JSON.stringify(m)));
+
+  // 3) 宿主按钮 → Desk API
+  document.getElementById('bPause').onclick = () => desk.pause();
+  document.getElementById('bResume').onclick = () => desk.resume();
+  document.getElementById('bReplay').onclick = () => desk.replay();
+
+  document.getElementById('bEvent').onclick = () => desk.sendEvent({
+    type: 'handoff', from: 'test', to: 'backend', kind: 'bug',
+    text: '实时事件演示：新发现一个 P2 缺陷，订单订阅重复推送，请排查。',
+    att: [{ fid: 'bug-500', ver: 1 }],
+  });
+
+  document.getElementById('bWork').onclick = () => desk.sendEvent({
+    type: 'work', role: 'frontend', dur: 2400, task: '实时任务：联调支付回调',
+  });
+
+  document.getElementById('bIv').onclick = () =>
+    desk.intervene('backend', '接口超时问题优先级提到 P0，先出热修复方案。');
+
+  // 4) 热替换项目数据（第二个内置演示）
+  document.getElementById('bLoad').onclick = () => {
+    const s = document.createElement('script');
+    s.src = './projects/official-website/project.js';
+    s.onload = () => desk.loadProject(Object.assign({}, window.PROJECT)); // window.PROJECT 由该文件定义
+    document.head.appendChild(s);
+  };
+</script>
+</body>
+</html>

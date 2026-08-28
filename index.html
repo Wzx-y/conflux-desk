@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'none'; object-src 'none'; base-uri 'none'">
+<title>Conflux Desk · 智能协作办公室</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header id="topbar">
+  <div class="brand">
+    <span class="logo">🏢</span>
+    <div class="brand-text">
+      <h1>Conflux Desk</h1>
+      <p>多智能体协作 · 虚拟办公室</p>
+    </div>
+    <span id="projName" class="projName" title="当前项目"></span>
+  </div>
+  <nav id="phaseChips" title="项目阶段"></nav>
+  <div class="controls">
+    <select id="projectSel" title="切换项目"></select>
+    <button id="btnPlay" class="btn primary">⏸ 暂停</button>
+    <button id="btnReplay" class="btn">↺ 重播</button>
+    <div class="seg" id="speedSeg">
+      <button data-speed="1">1x</button><button data-speed="2" class="active">2x</button><button data-speed="4">4x</button>
+    </div>
+  </div>
+</header>
+
+<main id="stageWrap">
+  <div id="stage">
+    <div class="wall">
+      <div class="window w1"><i></i><i></i></div>
+      <div class="window w2"><i></i><i></i></div>
+      <div class="board" id="phaseBoard">📌 准备中…</div>
+      <div class="clock" id="wallClock">🕐 09:00</div>
+    </div>
+    <div class="floor"></div>
+    <div class="rug"></div>
+    <div class="deco plant p1">🪴</div>
+    <div class="deco plant p2">🌿</div>
+    <div class="deco cooler">☕</div>
+    <div class="deco printer">🖨️</div>
+    <div id="wsLayer"></div>
+    <div id="charLayer"></div>
+  </div>
+
+  <aside id="eventLog" class="collapsed">
+    <header id="logToggle">
+      <span>📋 协作动态</span>
+      <b id="logCount">0</b><i class="caret">▾</i>
+    </header>
+    <ul id="logList"></ul>
+  </aside>
+
+  <div id="banner" class="hidden"></div>
+
+  <!-- 暂停时的人工介入面板 -->
+  <div id="intervene">
+    <div class="ivTitle">⏸ 已暂停 · 人工介入</div>
+    <div class="ivRow">
+      <span class="ivAt">@</span>
+      <select id="ivRole" title="选择要对话的角色"></select>
+      <input id="ivText" placeholder="告诉 TA 哪里不对、应该怎么做…（支持 @角色名 开头，回车发送）">
+      <button id="ivSend" class="btn primary">发送</button>
+    </div>
+    <div class="ivFoot">
+      <span class="ivHint">消息以「👔 主管」身份送达：气泡提示 · 屏幕切聊天窗 · 记入消息时间线</span>
+      <button id="ivResume" class="btn success">▶ 继续播放</button>
+    </div>
+  </div>
+</main>
+
+<div id="scrim"></div>
+
+<aside id="drawer" class="roleDrawer">
+  <div id="drawerBody"></div>
+</aside>
+
+<aside id="fileDrawer">
+  <div id="fileDrawerBody"></div>
+</aside>
+
+<script src="js/boot.js"></script>
+</body>
+</html>
